@@ -40,17 +40,17 @@ create_stacked_barplot <- function(df) {
     scale_y_continuous(breaks = function(x) seq(from = 0, to = ceiling(max(x)), by = 1)) +  # Integer breaks
     theme_classic(base_size = 16) +  # Increase base font size
     labs(
-      title = "Fungal species response specificity",
+      title = "Fungal isolate response specificity",
       x = "",
       y = "Number of plant species"
     ) +
     theme(
-      axis.text.x = element_text(angle = 65, hjust = 1, size = 12),
-      axis.text.y = element_text(size = 16),
-      axis.title = element_text(size = 16),
-      legend.text = element_text(size = 14),
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 12),
+      axis.text.y = element_text(size = 12),
+      axis.title = element_text(size = 13),
+      legend.text = element_text(size = 13),
       legend.title = element_text(size = 1),
-      title = element_text(size = 16),
+      title = element_text(size = 13),
       panel.grid.major.x = element_blank(),
       panel.border = element_blank(),
       legend.position = "right"
@@ -145,15 +145,13 @@ create_stacked_barplot <- function(df) {
       y = "Number of fungal species"
     ) +
     theme(
-      axis.text.x = element_text(angle = 65, hjust = 1, size = 12),
-      axis.text.y = element_text(size = 16),
-      axis.title = element_text(size = 16),
-      legend.text = element_text(size = 14),
-      legend.title = element_text(size = 1),
-      title = element_text(size = 16),
+      axis.text.x = element_text(angle = 70, hjust = 1, size = 12),
+      axis.text.y = element_text(size = 12),
+      axis.title = element_text(size = 13),
+      title = element_text(size = 13),
       panel.grid.major.x = element_blank(),
       panel.border = element_blank(),
-      legend.position = "right"
+      legend.position = "none"
     )
 }
 
@@ -196,4 +194,23 @@ plot_blwg_plant <- create_stacked_barplot(dat_blwg_plant)
 
 png("figures/response_specificity/response_specificity_blwg_plant.jpg", width = 7, height = 7, units ='in', res = 300)
 plot_blwg_plant
+dev.off()
+
+
+library(egg)
+plot_total = ggarrange(plot_total_plant, plot_total_fungi, nrow = 1)
+png("figures/response_specificity/response_specificity_total.jpg", width = 10, height = 6, units ='in', res = 300)
+plot_total
+dev.off()
+
+#abvg
+plot_abvg = ggarrange(plot_abvg_plant, plot_abvg_fungi, nrow = 1)
+png("figures/response_specificity/response_specificity_abvg.jpg", width = 10, height = 6, units ='in', res = 300)
+plot_abvg
+dev.off()
+
+#blwg
+plot_blwg = ggarrange(plot_blwg_plant, plot_blwg_fungi, nrow = 1)
+png("figures/response_specificity/response_specificity_blwg.jpg", width = 10, height = 6, units ='in', res = 300)
+plot_blwg
 dev.off()
