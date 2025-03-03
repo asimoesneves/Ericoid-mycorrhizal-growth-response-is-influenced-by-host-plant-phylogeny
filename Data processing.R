@@ -38,27 +38,27 @@ str(dat)
 
 ##### CHANGE PLANT SP NAMES FOR LONG NAME
 
-dat <- transform(dat,plant_sp=gsub(pattern="CVU", replacement="C_vulgaris", plant_sp))
-dat <- transform(dat,plant_sp=gsub(pattern="GSH", replacement="G_shallon", plant_sp))
-dat <- transform(dat,plant_sp=gsub(pattern="KLA", replacement="K_latifolia", plant_sp))
-dat <- transform(dat,plant_sp=gsub(pattern="PJA", replacement="P_japonica", plant_sp))
-dat <- transform(dat,plant_sp=gsub(pattern="RAR", replacement="R_arboreum", plant_sp))
-dat <- transform(dat,plant_sp=gsub(pattern="RFE", replacement="R_ferrugineum", plant_sp))
-dat <- transform(dat,plant_sp=gsub(pattern="VAN", replacement="V_angustifolium", plant_sp))
-dat <- transform(dat,plant_sp=gsub(pattern="VMY", replacement="V_myrtillus", plant_sp))
-dat <- transform(dat,plant_sp=gsub(pattern="VVI", replacement="V_vitis-idaea", plant_sp))
+dat <- transform(dat,plant_sp=gsub(pattern="CVU", replacement="C. vulgaris", plant_sp))
+dat <- transform(dat,plant_sp=gsub(pattern="GSH", replacement="G. shallon", plant_sp))
+dat <- transform(dat,plant_sp=gsub(pattern="KLA", replacement="K. latifolia", plant_sp))
+dat <- transform(dat,plant_sp=gsub(pattern="PJA", replacement="P. japonica", plant_sp))
+dat <- transform(dat,plant_sp=gsub(pattern="RAR", replacement="R. arboreum", plant_sp))
+dat <- transform(dat,plant_sp=gsub(pattern="RFE", replacement="R. ferrugineum", plant_sp))
+dat <- transform(dat,plant_sp=gsub(pattern="VAN", replacement="V. angustifolium", plant_sp))
+dat <- transform(dat,plant_sp=gsub(pattern="VMY", replacement="V. myrtillus", plant_sp))
+dat <- transform(dat,plant_sp=gsub(pattern="VVI", replacement="V. vitis-idaea", plant_sp))
 
 
 ##### CHANGE FUNGAL SP NAMES FOR LONG NAME
 
 dat <- transform(dat,fungal_sp=gsub(pattern="JPK-132", replacement="Serendipitaceae_sp", fungal_sp))
-dat <- transform(dat,fungal_sp=gsub(pattern="JPK-87", replacement="K_argillacea", fungal_sp))
-dat <- transform(dat,fungal_sp=gsub(pattern="MEB", replacement="H_bicolor", fungal_sp))
-dat <- transform(dat,fungal_sp=gsub(pattern="MEV", replacement="H_variabilis", fungal_sp))
-dat <- transform(dat,fungal_sp=gsub(pattern="MGK", replacement="H_gryndleri", fungal_sp))
-dat <- transform(dat,fungal_sp=gsub(pattern="OMA", replacement="O_maius", fungal_sp))
-dat <- transform(dat,fungal_sp=gsub(pattern="RER", replacement="H_hepaticicola_1", fungal_sp))
-dat <- transform(dat,fungal_sp=gsub(pattern="RHE", replacement="H_hepaticicola_2", fungal_sp))
+dat <- transform(dat,fungal_sp=gsub(pattern="JPK-87", replacement="K. argillacea", fungal_sp))
+dat <- transform(dat,fungal_sp=gsub(pattern="MEB", replacement="H. bicolor", fungal_sp))
+dat <- transform(dat,fungal_sp=gsub(pattern="MEV", replacement="H. variabilis", fungal_sp))
+dat <- transform(dat,fungal_sp=gsub(pattern="MGK", replacement="H. gryndleri", fungal_sp))
+dat <- transform(dat,fungal_sp=gsub(pattern="OMA", replacement="O. maius", fungal_sp))
+dat <- transform(dat,fungal_sp=gsub(pattern="RER", replacement="H. hepaticicola_PK 135-3", fungal_sp))
+dat <- transform(dat,fungal_sp=gsub(pattern="RHE", replacement="H. hepaticicola_UAMH7357/ICMP18553", fungal_sp))
 dat <- transform(dat,fungal_sp=gsub(pattern="STR", replacement="Sterile", fungal_sp))
 
 ###########################################################################################
@@ -186,8 +186,8 @@ dat$total_root_dry[i2] <- with(dat, dat$small_subsample_dry[i2]+dat$large_subsam
 STR=dat[dat[,"fungal_sp"]=="Sterile",c("plant_sp","shoot_weight")]
 
 avr_STR = rep(0, times=9)
-plant_nam = c("C_vulgaris", "G_shallon", "K_latifolia", "P_japonica", "R_arboreum",
-              "R_ferrugineum", "V_angustifolium", "V_myrtillus", "V_vitis-idaea")
+plant_nam = c("C. vulgaris", "G. shallon", "K. latifolia", "P. japonica", "R. arboreum",
+              "R. ferrugineum", "V. angustifolium", "V. myrtillus", "V. vitis-idaea")
 
 for (i in 1:9){
   x = STR[STR[,"plant_sp"]==plant_nam[i],]
@@ -208,8 +208,8 @@ dat$MGR_abvg = (dat$shoot_weight-dat$abvg_biomass_STR)/dat$abvg_biomass_STR
 STR_b=dat[dat[,"fungal_sp"]=="Sterile",c("plant_sp","total_root_dry")]
 
 avr_STR_b = rep(0, times=9)
-plant_nam = c("C_vulgaris", "G_shallon", "K_latifolia",
-              "P_japonica", "R_arboreum", "R_ferrugineum", "V_angustifolium", "V_myrtillus", "V_vitis-idaea")
+plant_nam = c("C. vulgaris", "G. shallon", "K. latifolia", "P. japonica", "R. arboreum",
+              "R. ferrugineum", "V. angustifolium", "V. myrtillus", "V. vitis-idaea")
 
 for (i in 1:9){
   x = STR_b[STR_b[,"plant_sp"]==plant_nam[i],]
@@ -236,8 +236,8 @@ dat$total_biomass = dat$total_root_dry + dat$shoot_weight
 
 STR_total =dat[dat[,"fungal_sp"]=="Sterile",c("plant_sp","total_biomass")]
 avr_STR_total = rep(0, times=9)
-plant_nam = c("C_vulgaris", "G_shallon", "K_latifolia", "P_japonica", "R_arboreum",
-              "R_ferrugineum", "V_angustifolium", "V_myrtillus", "V_vitis-idaea")
+plant_nam = c("C. vulgaris", "G. shallon", "K. latifolia", "P. japonica", "R. arboreum",
+              "R. ferrugineum", "V. angustifolium", "V. myrtillus", "V. vitis-idaea")
 
 for (i in 1:9){
   x = STR_total[STR_total[,"plant_sp"]==plant_nam[i],]
@@ -261,8 +261,8 @@ dat$above_below_ratio = dat$shoot_weight/dat$total_root_dry
 
 STR_ratio =dat[dat[,"fungal_sp"]=="Sterile",c("plant_sp","above_below_ratio")]
 avr_STR_ratio = rep(0, times=9)
-plant_nam = c("C_vulgaris", "G_shallon", "K_latifolia", "P_japonica", "R_arboreum",
-              "R_ferrugineum", "V_angustifolium", "V_myrtillus", "V_vitis-idaea")
+plant_nam = c("C. vulgaris", "G. shallon", "K. latifolia", "P. japonica", "R. arboreum",
+              "R. ferrugineum", "V. angustifolium", "V. myrtillus", "V. vitis-idaea")
 
 for (i in 1:9){
   x = STR_ratio[STR_total[,"plant_sp"]==plant_nam[i],]
@@ -297,4 +297,4 @@ ggplot(data=dat, mapping=aes(x=fungal_sp, fill=fungal_sp, y=above_below_ratio)) 
 dev.off()
 
 
-write.csv2(dat, "Harvested_Plants_Processed_try1.csv", row.names = FALSE)
+write.csv2(dat, "Harvested_Plants_Processed_try1_updated.csv", row.names = FALSE)
