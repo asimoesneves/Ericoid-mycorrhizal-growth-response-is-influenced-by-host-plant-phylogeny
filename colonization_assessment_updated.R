@@ -20,6 +20,8 @@ library(pbkrtest)
 library(forcats)
 library(sjPlot)
 library(sjmisc)
+library(dplyr)
+library(stringr)
 
 
 
@@ -83,7 +85,7 @@ str(spikes_ass)
 summary(spikes_ass)
 
 # import master spread sheet and see just colonization with coils
-dat = read.csv2("Harvested_Plants_Processed_try1.csv")
+dat = read.csv2("Harvested_Plants_Processed_try1_updated.csv")
 
 dat = dat %>% select(-c("replicate", "treatment", "blockx", "above_below_ratio",
                         "Dead.Sick", "Height.t1", "abvg_biomass_STR", "blwg_biomass_STR",
@@ -125,7 +127,7 @@ fixed_effects <- as.data.frame(summary(mod)$coefficients$cond)
 
 
 # Write to CSV
-write.csv2(fixed_effects, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/colonization_model_output_4thjan.csv", row.names=TRUE)
+write.csv2(fixed_effects, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/colonization_model_output_5thfeb.csv", row.names=TRUE)
 
 
 ref1 = emmeans::emmeans(mod, ~fungal_sp*plant_sp, type="response")
@@ -140,12 +142,13 @@ summary(ref1)
 ref.table1 = as.data.frame(ref1)
 
 # Write to CSV
-write.csv2(ref.table1, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/colonization_emmeans_output_4thjan.csv", row.names=TRUE)
+write.csv2(ref.table1, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/colonization_emmeans_output_5thfeb.csv", row.names=TRUE)
 
+ref.table1$fungal_sp <- gsub(fixed("Sterile"), "Non-inoculated", ref.table1$fungal_sp)
 
-ref.table1$plant_sp <- factor(ref.table1$plant_sp,levels = c("G_shallon", "V_myrtillus", "P_japonica",
-                                               "V_vitis-idaea", "C_vulgaris", "V_angustifolium",
-                                               "K_latifolia", "R_arboreum", "R_ferrugineum"))
+ref.table1$plant_sp <- factor(ref.table1$plant_sp,levels = c("G. shallon", "V. myrtillus", "P. japonica",
+                                               "V. vitis-idaea", "C. vulgaris", "V. angustifolium",
+                                               "K. latifolia", "R. arboreum", "R. ferrugineum"))
 
 
 # Create color palette with ordered species
@@ -153,23 +156,23 @@ library(RColorBrewer)
 
 # colors_definition.R
 fungal_colors <- c(
-  "Sterile" = "#66C2A5",
-  "H_gryndleri" = "#FC8D62",
-  "H_hepaticicola_1" = "#8DA0CB",
-  "H_hepaticicola_2" = "#E78AC3",
-  "K_argillacea" = "#A6D854",
-  "H_bicolor" = "#FFD92F",
-  "H_variabilis" = "#E5C494",
-  "O_maius" = "#B3B3B3",
+  "Non-inoculated" = "#66C2A5",
+  "H. gryndleri" = "#FC8D62",
+  "H. hepaticicola_PK 135-3" = "#8DA0CB",
+  "H. hepaticicola_UAMH7357/ICMP18553" = "#E78AC3",
+  "K. argillacea" = "#A6D854",
+  "H. bicolor" = "#FFD92F",
+  "H. variabilis" = "#E5C494",
+  "O. maius" = "#B3B3B3",
   "Serendipitaceae_sp" = "#7570B3"
 )
 
 saveRDS(fungal_colors, "fungal_colors.rds")
 
 ref.table1$fungal_sp <- factor(ref.table1$fungal_sp,
-                               levels = c("Sterile", "H_gryndleri", "H_hepaticicola_1", "H_hepaticicola_2",
-                                          "K_argillacea", "H_bicolor", "H_variabilis",
-                                          "O_maius", "Serendipitaceae_sp"))
+                               levels = c("Non-inoculated", "H. gryndleri", "H. hepaticicola_PK 135-3", "H. hepaticicola_UAMH7357/ICMP18553",
+                                          "K. argillacea", "H. bicolor", "H. variabilis",
+                                          "O. maius", "Serendipitaceae_sp"))
 
 png("figures/colonization/col_str_treatment_update.jpg", width = 18, height = 5.4, units ='in', res = 300)
   ggplot(ref.table1, aes(fungal_sp, prob, color = fungal_sp, fill = fungal_sp)) +  
@@ -193,25 +196,17 @@ png("figures/colonization/col_str_treatment_update.jpg", width = 18, height = 5.
       axis.text.x = element_blank(),
       axis.ticks.x = element_blank(),
       axis.line = element_line(size = 0.5),
-      strip.text = element_text(size = 15),
+      strip.text = element_text(size = 14),
       plot.title = element_text(hjust = 0.5, size = 16),
       axis.title.y = element_text(size = 16),
-      legend.title = element_text(size = 17),
-      legend.text = element_text(size = 16)
+      legend.title = element_text(size = 14),
+      legend.text = element_text(size = 13)
     ) +
-  ylab("Proportion colonized") +
+  ylab("Root colonization rate") +
   geom_hline(yintercept=0, linetype='dotted', col = "black", size=0.1)
 dev.off()
 
 
-
-ref1$plant_sp <- factor(ref1$plant_sp,levels = c("G_shallon", "V_myrtillus", "P_japonica",
-                                                             "V_vitis-idaea", "C_vulgaris", "V_angustifolium",
-                                                             "K_latifolia", "R_arboreum", "R_ferrugineum"))
-
-ref1$fungal_sp <- factor(ref1$fungal_sp,levels = c("Sterile", "H_gryndleri", "H_hepaticicola_1", "H_hepaticicola_2",
-                                                               "K_argillacea", "H_bicolor", "H_variabilis",
-                                                               "O_maius", "Serendipitaceae_sp"))
 
 tab_results = pairs(ref1)
 
@@ -227,15 +222,55 @@ tab_results = as.data.frame(tab_results)
 
 tab_results = separate(tab_results, col=contrast, into=c('comb1', 'comb2'), sep=' / ')
 tab_results$p_value_stars <- makeStars(tab_results$p.value)
-tab_results = separate(tab_results, col=comb1, into=c('fungi1', 'plant1'), sep=" (?=[^ ]+$)")
-tab_results = separate(tab_results, col=comb2, into=c('fungi2', 'plant2'), sep=" (?=[^ ]+$)")
-tab_results
 
 #remove "(" and ")" from some of the cells
-tab_results$fungi1 <- gsub("\\(", "", tab_results$fungi1)
-tab_results$fungi2 <- gsub("\\(", "", tab_results$fungi2)
-tab_results$plant1 <- gsub("\\)", "", tab_results$plant1)
-tab_results$plant2 <- gsub("\\)", "", tab_results$plant2)
+tab_results$comb1 <- gsub("\\(", "", tab_results$comb1)
+tab_results$comb2 <- gsub("\\(", "", tab_results$comb2)
+tab_results$comb1 <- gsub("\\)", "", tab_results$comb1)
+tab_results$comb2 <- gsub("\\)", "", tab_results$comb2)
+
+
+#separate comb1 into fungi1 and plant1 and comb2 into fungi2 plant2
+
+# Create a function that will split the combination based on the plant name pattern
+split_combination <- function(combination) {
+  # Create a pattern with all possible plant names
+  # Escape special characters like "-" and "."
+  plant_patterns <- c(
+    "G\\. shallon", "V\\. myrtillus", "P\\. japonica",
+    "V\\. vitis-idaea", "C\\. vulgaris", "V\\. angustifolium",
+    "K\\. latifolia", "R\\. arboreum", "R\\. ferrugineum"
+  )
+  
+  # Create a regex pattern that matches any of the plant names
+  plant_pattern <- paste0("(", paste(plant_patterns, collapse="|"), ")$")
+  
+  # Extract the plant name
+  plant_name <- str_extract(combination, plant_pattern)
+  
+  # Extract the fungi name by removing the plant name
+  fungi_name <- str_replace(combination, paste0(" ", plant_pattern), "")
+  
+  return(list(fungi = fungi_name, plant = plant_name))
+}
+
+# Apply the function to both columns
+tab_results = tab_results %>%
+  mutate(
+    comb1_split = map(comb1, split_combination),
+    comb2_split = map(comb2, split_combination),
+    
+    fungi1 = map_chr(comb1_split, "fungi"),
+    plant1 = map_chr(comb1_split, "plant"),
+    fungi2 = map_chr(comb2_split, "fungi"),
+    plant2 = map_chr(comb2_split, "plant")
+  ) %>%
+  select(-comb1_split, -comb2_split)  # Remove the intermediate columns
+
+tab_results = tab_results %>%
+  select(-comb1, -comb2)
+
+
 
 # Filter the results to keep only rows where:
 # 1. Either fungi1 or fungi2 is "Sterile"
@@ -252,18 +287,7 @@ filtered_results <- filtered_results[order(filtered_results$plant1), ]
 summary_table <- table(filtered_results$plant1)
 print(summary_table)
 
-write.csv2(filtered_results, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/colonization_pairs_5th.csv", row.names=FALSE)
-
-
-########### not sure about this..
-means_col_fungi = emmeans::emmeans(mod, ~fungal_sp, type="response")
-means_col_fungi
-summary(means_col_fungi)
-#Add p-value and statistical tests
-means_col_fungi = update(means_col_fungi, infer = c(TRUE, TRUE), null = log(35), type="response",
-                           calc = c(n = ".wgt."))
-summary(means_col_fungi)
-
+write.csv2(filtered_results, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/colonization_pairs_3rdmar.csv", row.names=FALSE)
 
 
 ##### colonization and MGR
@@ -311,9 +335,9 @@ c = anova(colmx)
 plot(colmx)
 
 
-write.csv2(a, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRtotal_col.csv", row.names=TRUE)
-write.csv2(b, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRabvg_col.csv", row.names=TRUE)
-write.csv2(c, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRblwg_col.csv", row.names=TRUE)
+write.csv2(a, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRtotal_col_updated.csv", row.names=TRUE)
+write.csv2(b, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRabvg_col_updated.csv", row.names=TRUE)
+write.csv2(c, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRblwg_col_updated.csv", row.names=TRUE)
 
 
 
@@ -348,9 +372,9 @@ f = anova(colm_h3)
 plot(colm_h3)
 
 
-write.csv2(d, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRtotal_hyphae.csv", row.names=TRUE)
-write.csv2(e, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRabvg_hyphae.csv", row.names=TRUE)
-write.csv2(f, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRblwg_hyphae.csv", row.names=TRUE)
+write.csv2(d, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRtotal_hyphae_updated.csv", row.names=TRUE)
+write.csv2(e, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRabvg_hyphae_updated.csv", row.names=TRUE)
+write.csv2(f, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRblwg_hyphae_updated.csv", row.names=TRUE)
 
 
 ##### colonization and MGR - conidiophores
@@ -384,9 +408,9 @@ i = anova(colm_c3)
 plot(colm_c3)
 
 
-write.csv2(g, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRtotal_conidiophores.csv", row.names=TRUE)
-write.csv2(h, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRabvg_conidiophores.csv", row.names=TRUE)
-write.csv2(i, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRblwg_conidiophores.csv", row.names=TRUE)
+write.csv2(g, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRtotal_conidiophores_updated.csv", row.names=TRUE)
+write.csv2(h, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRabvg_conidiophores_updated.csv", row.names=TRUE)
+write.csv2(i, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRblwg_conidiophores_updated.csv", row.names=TRUE)
 
 
 
@@ -397,16 +421,17 @@ write.csv2(i, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester 
 
 # models didn't work, so plot real values in boxplot
 #################################################################
+dat$fungal_sp <- gsub(fixed("Sterile"), "Non-inoculated", dat$fungal_sp)
 
 
-dat$plant_sp <- factor(dat$plant_sp,levels = c("G_shallon", "V_myrtillus", "P_japonica",
-                                                             "V_vitis-idaea", "C_vulgaris", "V_angustifolium",
-                                                             "K_latifolia", "R_arboreum", "R_ferrugineum"))
+dat$plant_sp <- factor(dat$plant_sp,levels = c("G. shallon", "V. myrtillus", "P. japonica",
+                                               "V. vitis-idaea", "C. vulgaris", "V. angustifolium",
+                                               "K. latifolia", "R. arboreum", "R. ferrugineum"))
 
 
-dat$fungal_sp <- factor(dat$fungal_sp,levels = c("Sterile", "H_gryndleri", "H_hepaticicola_1", "H_hepaticicola_2",
-                                                               "K_argillacea", "H_bicolor", "H_variabilis",
-                                                               "O_maius", "Serendipitaceae_sp"))
+dat$fungal_sp <- factor(dat$fungal_sp,levels = c("Non-inoculated", "H. gryndleri", "H. hepaticicola_PK 135-3", "H. hepaticicola_UAMH7357/ICMP18553",
+                                                 "K. argillacea", "H. bicolor", "H. variabilis",
+                                                 "O. maius", "Serendipitaceae_sp"))
 
 #plot hyphal colonization
 png("figures/colonization/hyphae_col_assessment_updated.jpg", width = 18, height = 5.4, units ='in', res = 300)
@@ -429,13 +454,13 @@ ggplot(dat, aes(fungal_sp, percent_colonization_h, color = fungal_sp, fill = fun
     axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     axis.line = element_line(size = 0.5),
-    strip.text = element_text(size = 15),
+    strip.text = element_text(size = 14),
     plot.title = element_text(hjust = 0.5, size = 16),
     axis.title.y = element_text(size = 16),
-    legend.title = element_text(size = 17),
-    legend.text = element_text(size = 16)
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 13)
   ) +
-  ylab("Proportion colonized - Hyphae") +
+  ylab("Root colonization rate - Hyphae") +
   theme(axis.title.x=element_blank())
 dev.off()
 
@@ -460,13 +485,12 @@ ggplot(dat, aes(fungal_sp, percent_colonization_s, color = fungal_sp, fill = fun
     axis.text.x = element_blank(),
     axis.ticks.x = element_blank(),
     axis.line = element_line(size = 0.5),
-    strip.text = element_text(size = 15),
+    strip.text = element_text(size = 14),
     plot.title = element_text(hjust = 0.5, size = 16),
     axis.title.y = element_text(size = 16),
-    legend.title = element_text(size = 17),
-    legend.text = element_text(size = 16)
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 13)
   ) +
-  ylab("Proportion colonized - Conidiophores") +
+  ylab("Root colonization rate - Conidiophores") +
   theme(axis.title.x=element_blank())
 dev.off()
-
