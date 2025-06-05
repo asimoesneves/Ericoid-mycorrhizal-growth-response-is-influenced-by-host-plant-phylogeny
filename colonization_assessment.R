@@ -339,6 +339,62 @@ write.csv2(a, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester 
 write.csv2(b, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRabvg_col_updated.csv", row.names=TRUE)
 write.csv2(c, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRblwg_col_updated.csv", row.names=TRUE)
 
+#### colonization and MGR (hyphal coils) - subset of plant-fungi combinations
+## that had significantly higher colonization than control
+#from filtered_results take combinations that are not significantly different
+combinations_contaminated = filtered_results %>%
+  select (-c(odds.ratio, SE, df, null, z.ratio, p.value, fungi2, plant2))
+
+combinations_contaminated <- combinations_contaminated %>%
+  filter(!(p_value_stars!= "ns")) %>%
+  rename(fungal_sp = fungi1, plant_sp = plant1) %>%
+  select(-c(p_value_stars))
+
+###from dat1 remove the plant-fungi combinations that are present in combinations_contaminated
+dat_subset <- dat1 %>%
+  anti_join(combinations_contaminated, by = c("plant_sp", "fungal_sp"))
+
+ms = min(dat_subset$MGR)
+ns = ms*-1+0.01
+
+
+#tried with:
+colms = lmer(log(MGR+ns)~plant_sp*percent_colonization*fungal_sp +   Height.t0 + (1|block), data=dat_subset)
+colm1s = lmer(log(MGR+ns)~plant_sp*percent_colonization + fungal_sp*percent_colonization +
+               plant_sp*fungal_sp + Height.t0 + (1|block), data=dat_subset)
+
+colm2s = lmer(log(MGR+ns)~fungal_sp*percent_colonization + plant_sp + Height.t0 + (1|block), data=dat_subset)
+colm3s = lmer(log(MGR+ns)~plant_sp*percent_colonization + fungal_sp + Height.t0 + (1|block), data=dat_subset)
+
+colm4s = lmer(log(MGR+ns)~plant_sp + percent_colonization + fungal_sp + Height.t0 + (1|block), data=dat_subset)
+
+summary(colm4s)
+as = anova(colm4s)
+plot(colm4s)
+
+#aboveground
+os = min(dat_subset$MGR_abvg)
+ps = os*-1+0.01
+colms = lmer(log(MGR_abvg+ps)~plant_sp + percent_colonization + fungal_sp + Height.t0 + (1|block), data=dat_subset)
+summary(colms)
+bs = anova(colms)
+plot(colms)
+
+
+#belowground
+qs = min(dat_subset$MGR_blwg)
+rs = qs*-1+0.01
+colmxs = lmer(log(MGR_blwg+rs)~plant_sp + percent_colonization + fungal_sp + Height.t0 + (1|block), data=dat_subset)
+summary(colmxs)
+cs = anova(colmxs)
+plot(colmxs)
+
+
+
+write.csv2(as, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRtotal_col_subset.csv", row.names=TRUE)
+write.csv2(bs, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRabvg_col_subset.csv", row.names=TRUE)
+write.csv2(cs, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGRblwg_col_subset.csv", row.names=TRUE)
+
 
 
 ##### colonization and MGR - hyphae
