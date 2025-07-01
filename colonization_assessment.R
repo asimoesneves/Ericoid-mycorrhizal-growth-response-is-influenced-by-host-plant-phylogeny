@@ -73,7 +73,7 @@ hyphae_ass$percent_colonization_h = hyphae_ass$colonized_h/hyphae_ass$intersecti
 str(hyphae_ass)
 summary(hyphae_ass)
 
-#dataframe for spikes
+#dataframe for conidiophores
 spikes_ass = col_ass %>% 
   group_by(random_label) %>% 
   summarize(colonized_s = sum(Spikes),
@@ -232,7 +232,7 @@ tab_results$comb2 <- gsub("\\)", "", tab_results$comb2)
 
 #separate comb1 into fungi1 and plant1 and comb2 into fungi2 plant2
 
-# Create a function that will split the combination based on the plant name pattern
+# split the combination based on the plant name pattern
 split_combination <- function(combination) {
   # Create a pattern with all possible plant names
   # Escape special characters like "-" and "."
@@ -254,7 +254,7 @@ split_combination <- function(combination) {
   return(list(fungi = fungi_name, plant = plant_name))
 }
 
-# Apply the function to both columns
+
 tab_results = tab_results %>%
   mutate(
     comb1_split = map(comb1, split_combination),
@@ -272,18 +272,14 @@ tab_results = tab_results %>%
 
 
 
-# Filter the results to keep only rows where:
-# 1. Either fungi1 or fungi2 is "Sterile"
-# 2. plant1 and plant2 are the same
+# keep rows with "sterile" and plant1=plant2
 filtered_results <- tab_results[
   (tab_results$fungi1 == "Sterile" | tab_results$fungi2 == "Sterile") & 
     (tab_results$plant1 == tab_results$plant2),
 ]
 
-# Optional: Sort by plant species to keep them grouped
-filtered_results <- filtered_results[order(filtered_results$plant1), ]
 
-# Optional: To see how many comparisons we have per plant species
+filtered_results <- filtered_results[order(filtered_results$plant1), ]
 summary_table <- table(filtered_results$plant1)
 print(summary_table)
 
