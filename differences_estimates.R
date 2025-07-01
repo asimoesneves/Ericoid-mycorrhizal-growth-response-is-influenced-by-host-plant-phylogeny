@@ -150,7 +150,7 @@ ggplot(data=dat1, mapping=aes(x=weight.dry.root, y=weight.dry.estimated)) +
   theme(aspect.ratio = 1.2)
 dev.off()
 
-## without the bad row
+## without outlier
 
 df$Plant.sp <- factor(df$Plant.sp,levels = c("G_shallon", "V_myrtillus", "P_japonica",
                                                      "V_vitis-idaea", "C_vulgaris", "V_angustifolium",
