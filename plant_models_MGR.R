@@ -78,8 +78,7 @@ anova(bm1)
 plot(bm1)
 
 
-#save model output
-# Extract fixed effects coefficients and statistics
+#save model output, extract fixed effects coefficients and statistics
 abvg_model_output <- as.data.frame(summary(bm1)$coefficients)
 
 # Write to CSV - model output
@@ -145,13 +144,13 @@ meas_abvg$plant_sp <- factor(meas_abvg$plant_sp,levels = c("G. shallon", "V. myr
                                                      "K. latifolia", "R. arboreum", "R. ferrugineum"))
 
 
-#Add Sterile Treatment to Dataset
+#Add Sterile Treatment to Dataset to have the empty space to make colonization and MGR plots match
 
-# First, add "Sterile" to fungal species factor levels
+# add "Sterile" to fungal species factor levels
 meas_abvg$fungal_sp <- factor(meas_abvg$fungal_sp,
                                levels = c(levels(meas_abvg$fungal_sp), "Non-inoculated"))
 
-# Create a data frame with all plant species and the Sterile treatment
+# data frame with all plant species and the Sterile treatment
 sterile_rows <- data.frame(
   plant_sp = levels(meas_abvg$plant_sp),
   fungal_sp = rep("Non-inoculated", length(levels(meas_abvg$plant_sp)))
@@ -243,7 +242,7 @@ tab_results$comb2 <- gsub("\\)", "", tab_results$comb2)
 
 
 #separate comb1 into fungi1 and plant1 and comb2 into fungi2 plant2
-# Create a function that will split the combination based on the plant name pattern
+# function that will split the combination based on the plant name pattern
 split_combination <- function(combination) {
   # Create a pattern with all possible plant names
   # Escape special characters like "-" and "."
@@ -265,7 +264,7 @@ split_combination <- function(combination) {
   return(list(fungi = fungi_name, plant = plant_name))
 }
 
-# Apply the function to both columns
+
 tab_results = tab_results %>%
   mutate(
     comb1_split = map(comb1, split_combination),
@@ -282,7 +281,7 @@ tab_results = tab_results %>%
   select(-comb1, -comb2)
 
 
-# Filter to keep only rows where plant species match
+# keep only rows plant1=plant2
 filtered_results_abvg <- tab_results[tab_results$plant1 == tab_results$plant2, ]
 
 write.csv2(filtered_results_abvg, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGR_abvg_pairs_3rdmar.csv", row.names=FALSE)
@@ -380,9 +379,8 @@ meas_blwg$plant_sp <- factor(meas_blwg$plant_sp,levels = c("G. shallon", "V. myr
                                                            "K. latifolia", "R. arboreum", "R. ferrugineum"))
 
 
-#Add Sterile Treatment to Dataset
+#Add Sterile Treatment to Dataset - same reason as aboveground
 
-# First, add "Sterile" to fungal species factor levels
 meas_blwg$fungal_sp <- factor(meas_blwg$fungal_sp,
                               levels = c(levels(meas_blwg$fungal_sp), "Non-inoculated"))
 
@@ -494,7 +492,7 @@ tab_results_b = tab_results_b %>%
   select(-comb1, -comb2)
 
 
-# Filter to keep only rows where plant species match
+# keep rows plant1=plant2
 filtered_results_blwg <- tab_results_b[tab_results_b$plant1 == tab_results_b$plant2, ]
 
 write.csv2(filtered_results_blwg, "C:/Users/Dpao/Desktop/Master's Biology/Master Thesis/#2 semester project/Ericoid Project/MGR_blwg_pairs_3rdmar.csv", row.names=FALSE)
@@ -588,9 +586,9 @@ meas_total$plant_sp <- factor(meas_total$plant_sp,levels = c("G. shallon", "V. m
                                                              "K. latifolia", "R. arboreum", "R. ferrugineum"))
 
 
-#Add Sterile Treatment to Dataset
+#Add Sterile Treatment to Dataset - same as aboveground
 
-# First, add "Sterile" to fungal species factor levels
+# add "Sterile" to fungal species factor levels
 meas_total$fungal_sp <- factor(meas_total$fungal_sp,
                                levels = c(levels(meas_total$fungal_sp), "Non-inoculated"))
 
